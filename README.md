@@ -10,3 +10,12 @@ Application for testing cluster failover from master and replica.
   + Коллектим каждую тестовую сущность, транзакция которой успешно выполнена;
   + Читаем все данные с slave и сравниваем вхождения с коллекцией сущностей транзакции;
   + Тест ~~падает~~ не падает, все выполнено успешно (но это не точно).
+
+Build tool - __Gradle__.
+
+## Frameworks:
+
+  + org.jetbrains.exposed:exposed-core/dao/jdbc:0.24.1;
+  + org.postgresql:postgresql:42.2.2;
+  + junit:junit:4.12;
+  + https://github.com/jkelly467/kossh.
