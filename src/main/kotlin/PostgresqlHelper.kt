@@ -23,7 +23,7 @@ class PostgresqlHelper(
 
     override fun writeTests(tests: TreeSet<TestEntity>) {
 
-        val randomFailover = random.nextInt(1000, 2000)
+        val randomFailover = random.nextInt(300000, 600000)
 
         println("randomFailover = $randomFailover")
 
