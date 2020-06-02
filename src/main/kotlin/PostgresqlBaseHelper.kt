@@ -15,7 +15,7 @@ interface PostgresqlBaseHelper<T> {
     val random: ThreadLocalRandom
         get() = ThreadLocalRandom.current()
 
-    fun writeTests(tests: T): T
+    fun writeTests(tests: T)
 
     fun deleteAll()
 

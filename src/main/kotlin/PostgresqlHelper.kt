@@ -17,12 +17,13 @@ class PostgresqlHelper(
         password = password
     )
 
-    private val threadPool = Executors.newFixedThreadPool(100)
     private val transactionSet = TreeSet<TestEntity>()
+    private val threadPool = Executors.newFixedThreadPool(100)
+    val liveDataSet = LiveDataSet<TestEntity>()
 
-    override fun writeTests(tests: TreeSet<TestEntity>): TreeSet<TestEntity> {
+    override fun writeTests(tests: TreeSet<TestEntity>) {
 
-        val randomFailover = random.nextInt(300000, 700000)
+        val randomFailover = random.nextInt(1000, 2000)
 
         println("randomFailover = $randomFailover")
 
@@ -33,16 +34,16 @@ class PostgresqlHelper(
 
         tests.forEachIndexed { index, testEntity ->
 
-            if (index >= randomFailover) {
-
-                HelperSSH.shutdownMaster()
-                threadPool.shutdownNow()
-                return transactionSet
-            }
-
             threadPool.submit {
 
                 Thread.sleep(random.nextLong(800L))
+
+                if (index >= randomFailover) {
+
+                    HelperSSH.shutdownMaster()
+                    threadPool.shutdownNow()
+                    liveDataSet.postValue(transactionSet)
+                }
 
                 transaction {
 
@@ -53,7 +54,7 @@ class PostgresqlHelper(
             }
         }
 
-        return transactionSet
+        while (threadPool.isShutdown.not()) {}
     }
 
     override fun deleteAll() {
